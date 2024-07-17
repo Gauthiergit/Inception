@@ -19,16 +19,18 @@ RUN useradd -ms /bin/bash wordpress
 RUN chown -R wordpress:wordpress /var/www/wordpress
 USER wordpress
 WORKDIR /var/www/wordpress
-RUN sleep 20
+EXPOSE 9000
+
+RUN sleep 10
 RUN wp config create --allow-root \
-	--dbname=$SQL_DATABASE \
-	--dbuser=$SQL_USER \
-	--dbpass=$SQL_PASSWORD \
-	--dbhost=$SQL_PORT \
+	--dbname=$WORDPRESS_DB_NAME \
+	--dbuser=$WORDPRESS_DB_USER \
+	--dbpass=$WORDPRESS_DB_PASSWORD \
+	--dbhost=$WORDPRESS_DB_HOST \
 	--path='/var/www/wordpress'
-RUN wp core install --url=gpeyre.42 --title=My Wordpress --admin_user=gpeyre
+
+#ENTRYPOINT ["bash", "create-config.sh"]
+RUN wp core install --url=gpeyre.42 --title=MyWordpress --admin_user=gpeyre
 RUN wp user create gpeyre --user_pass=$USER_PASSWORD --role=author
 RUN wp user create max --porcelain
-RUN chmod +x /var/www/wordpress/wp-config-sample.php
-ENTRYPOINT ["bash", "auto-config.sh"]
 CMD ["/bin/bash", "-c", "php-fpm7.3 -F"]
