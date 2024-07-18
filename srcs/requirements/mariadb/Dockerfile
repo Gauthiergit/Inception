@@ -6,6 +6,7 @@ RUN apt install mariadb-server -y
 RUN apt install vim -y
 
 EXPOSE 3306
+ENV PATH+=":/usr/lib"
 ADD conf/50-server.cnf /etc/mysql/mariadb.conf.d
 #COPY conf/50-server.cnf etc/mysql/mariadb.conf.d/50-server.cnf
 COPY tools/create_user.sh usr/bin/create_user.sh
