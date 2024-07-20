@@ -1,4 +1,4 @@
-FROM debian:buster
+FROM debian:latest
 
 RUN apt update -y
 RUN apt upgrade -y
@@ -21,7 +21,7 @@ USER wordpress
 WORKDIR /var/www/wordpress
 EXPOSE 9000
 
-RUN sleep 10
+RUN sleep 20
 RUN wp config create --allow-root \
 	--dbname=$WORDPRESS_DB_NAME \
 	--dbuser=$WORDPRESS_DB_USER \
