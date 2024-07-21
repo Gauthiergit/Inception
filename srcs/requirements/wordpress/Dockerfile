@@ -21,7 +21,10 @@ USER wordpress
 WORKDIR /var/www/wordpress
 EXPOSE 9000
 
-RUN sleep 20
+COPY wait-for-db.sh /usr/local/bin/
+#RUN chmod +x /usr/local/bin/wait-for-db.sh
+
+RUN sleep 10
 RUN wp config create --allow-root \
 	--dbname=$WORDPRESS_DB_NAME \
 	--dbuser=$WORDPRESS_DB_USER \
