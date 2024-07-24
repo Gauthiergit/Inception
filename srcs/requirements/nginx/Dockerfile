@@ -14,6 +14,7 @@ RUN chown -R www-data:www-data /var/www/html
 
 EXPOSE 443
 
-COPY conf/nginx.conf /etc/nginx/nginx.conf
+COPY conf/nginx.conf /etc/nginx/conf.d/default.conf
 
-CMD :    CMD [ "nginx", "-g", "daemon off;" ]
+CMD ["nginx", "-g", "daemon off;"]
+#CMD ["tail", "-f"] 

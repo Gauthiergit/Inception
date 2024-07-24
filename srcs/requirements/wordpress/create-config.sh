@@ -30,4 +30,4 @@ if [ ! -d /run/php ]; then
     mkdir /run/php
 fi
 
-exec "$@"
+/bin/bash -c php-fpm7.3 -F

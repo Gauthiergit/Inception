@@ -44,4 +44,4 @@ COPY create-config.sh /usr/bin/create-config.sh
 RUN chmod +x /usr/bin/create-config.sh
 ENTRYPOINT ["bash", "create-config.sh"]
 
-CMD ["/bin/bash", "-c", "php-fpm7.3 -F"]
+#CMD ["/bin/bash", "-c", "php-fpm7.3 -F"]
