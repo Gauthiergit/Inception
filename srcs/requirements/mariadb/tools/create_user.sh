@@ -1,11 +1,9 @@
-mysql_install_db
+service mysql start
 
-/etc/init.d/mysql start
-
-while ! mysqladmin -h localhost ping --silent; do
-    echo "Waiting for MariaDB to be available..."
-    sleep 10
-done
+#while ! mysqladmin -h localhost ping --silent; do
+#    echo "Waiting for MariaDB to be available..."
+#    sleep 10
+#done
 
 # Créer la base de données et l'utilisateur
 mysql -u root -p${MYSQL_ROOT_PASSWORD} <<EOF
@@ -25,4 +23,4 @@ fi
 # Arrêter le service MariaDB
 mysqladmin -u root -p${MYSQL_ROOT_PASSWORD} shutdown
 
-/etc/init.d/mysql stop
+service mysql restart
