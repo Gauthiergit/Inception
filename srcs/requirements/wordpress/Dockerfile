@@ -1,30 +1,39 @@
-FROM debian:buster
+FROM debian:bullseye
 
 RUN apt update -y
 RUN apt upgrade -y
 RUN apt install vim -y
 RUN apt install curl -y
 RUN apt-get -y install wget
-RUN apt-get install -y php7.3\
+RUN apt-get install -y php7.4\
 	php-fpm\
 	php-mysql\
+	php-intl\
 	mariadb-client
 
-RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
-    chmod +x wp-cli.phar && \
-    mv wp-cli.phar /usr/local/bin/wp && \
-    wp --info
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+RUN chmod +x wp-cli.phar
+RUN mv wp-cli.phar /usr/local/bin/wp
+
+RUN chmod 755 /usr/local/bin/wp
+
+RUN wp cli update
 
 RUN wget https://fr.wordpress.org/wordpress-6.5.5-fr_FR.tar.gz -P /var/www
 RUN cd /var/www && tar -xzf wordpress-6.5.5-fr_FR.tar.gz && rm wordpress-6.5.5-fr_FR.tar.gz
-RUN chown -R root:root /var/www/wordpress
+RUN mv /var/www/wordpress /var/www/html
+
+RUN chown -R root:root /var/www/html
 
 #COPY conf/php.ini /etc/php/7.3/fpm/php.ini
-COPY conf/www.conf /etc/php/7.3/fpm/pool.d/
+COPY conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
 
 
-COPY wait-for-db.sh /usr/local/bin/
+COPY wait-for-db.sh /usr/local/bin/wait-for-db.sh
 RUN chmod +x /usr/local/bin/wait-for-db.sh
+
+RUN mkdir -p /run/php
+RUN chmod 777 /run/php
 
 #RUN sleep 10
 #RUN wp config create --allow-root \
@@ -44,4 +53,4 @@ COPY create-config.sh /usr/bin/create-config.sh
 RUN chmod +x /usr/bin/create-config.sh
 ENTRYPOINT ["bash", "create-config.sh"]
 
-#CMD ["/bin/bash", "-c", "php-fpm7.3 -F"]
+CMD ["/usr/sbin/php-fpm7.4", "-F"]

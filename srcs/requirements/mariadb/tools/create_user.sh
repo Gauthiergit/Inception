@@ -1,4 +1,4 @@
-service mysql start
+service mariadb start
 
 #while ! mysqladmin -h localhost ping --silent; do
 #    echo "Waiting for MariaDB to be available..."
@@ -23,4 +23,4 @@ fi
 # Arrêter le service MariaDB
 mysqladmin -u root -p${MYSQL_ROOT_PASSWORD} shutdown
 
-service mysql restart
+exec "$@"

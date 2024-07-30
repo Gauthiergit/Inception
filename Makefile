@@ -5,3 +5,4 @@ stop:
 down:
 	@docker-compose -f ./srcs/docker-compose.yml down -v
 	@docker system prune -af
+re: down all

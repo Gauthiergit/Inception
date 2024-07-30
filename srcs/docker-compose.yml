@@ -1,6 +1,7 @@
 services:
   mariadb:
     container_name: mariadb
+    image: mariadb
     networks:
       - inception
     build:
@@ -16,26 +17,27 @@ services:
 
   nginx:
     container_name: nginx
+    image: nginx
     volumes:
-      - wordpress:/var/www/wordpress
+      - wordpress:/var/www/html
     networks:
       - inception
     depends_on:
       - wordpress
-      - mariadb
     build:
       context: requirements/nginx
       dockerfile: Dockerfile
     ports:
       - "443:443"
-    restart: always
+    restart: unless-stopped
 
   wordpress:
     container_name: wordpress
+    image: wordpress
     env_file:
       - .env
     volumes:
-      - wordpress:/var/www/wordpress
+      - wordpress:/var/www/html
     networks:
       - inception
     build:
@@ -43,7 +45,7 @@ services:
       dockerfile: Dockerfile
     depends_on:
       - mariadb
-    restart: always
+    restart: unless-stopped
     ports:
       - "9000:9000"
 
