@@ -1,0 +1,65 @@
+services:
+  db:
+    container_name: db
+    build:
+      context: ./requirements/db
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    env_file:
+      - .env
+    networks:
+      - inception
+    restart: always
+
+  wordpress:
+    container_name: wordpress
+    build:
+      context: ./requirements/wordpress
+    depends_on:
+      - db
+    volumes:
+      - wordpress_files:/var/www/html
+    env_file:
+      - .env
+    expose:
+      - "9000"
+    networks:
+      - inception
+    restart: always
+
+  nginx:
+    container_name: nginx
+    build:
+      context: ./requirements/nginx
+    ports:
+      - "443:443"
+    depends_on:
+      - wordpress
+      - db
+    volumes:
+      - wordpress_files:/var/www/html
+      - ./requirements/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - inception
+    restart: always
+
+volumes:
+  wordpress_files:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/home/gpeyre/data/wordpress"
+  db_data:
+    driver: local
+    driver_opts:
+      type: "none"
+      o: "bind"
+      device: "/home/gpeyre/data/mariadb"
+
+networks:
+  inception:
+    name: inception
+    driver: bridge
